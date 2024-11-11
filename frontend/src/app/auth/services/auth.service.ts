@@ -33,11 +33,6 @@ export class AuthService {
   }): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/register`, userData)
       .pipe(
-        map(user => {
-          localStorage.setItem('currentUser', JSON.stringify(user));
-          this.currentUserSubject.next(user);
-          return user;
-        }),
         catchError(error => {
           console.error('Registration error:', error);
           throw error;
