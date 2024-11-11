@@ -6,6 +6,7 @@ import { EmployeeDashboardComponent } from './dashboard/dashboard.component';
 import { TransactionVerificationComponent } from './transaction-verification/transaction-verification.component';
 import { SwiftSubmissionComponent } from './swift-submission/swift-submission.component';
 import { AuthGuard } from '../auth/guards/auth.guard';
+import { AllTransactionsComponent } from './all-transactions/all-transactions.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,7 @@ const routes: Routes = [
     children: [
       { path: 'verify', component: TransactionVerificationComponent },
       { path: 'swift', component: SwiftSubmissionComponent },
+      { path: 'all-transactions', component: AllTransactionsComponent },
       { path: '', redirectTo: 'verify', pathMatch: 'full' }
     ]
   },
@@ -26,7 +28,8 @@ const routes: Routes = [
   declarations: [
     EmployeeDashboardComponent,
     TransactionVerificationComponent,
-    SwiftSubmissionComponent
+    SwiftSubmissionComponent,
+    AllTransactionsComponent
   ],
   imports: [
     CommonModule,

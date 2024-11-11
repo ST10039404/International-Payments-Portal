@@ -7,6 +7,7 @@ import authRoutes from './routes/authRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import rateLimit from 'express-rate-limit';
 import { connectDB } from './config/db.js';
+import { createSessionMiddleware } from './middleware/session.js';
 
 dotenv.config();
 
@@ -25,13 +26,38 @@ app.use(cors({
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => {
+    return req.ip + req.user?.id; // Combine IP and user ID
+  },
+  handler: (req, res) => {
+    res.status(429).json({
+      success: false,
+      message: 'Too many requests, please try again later.'
+    });
+  }
 });
 app.use('/api/', limiter);
+
+// Specific limiters for sensitive routes
+const authLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5, // 5 failed attempts
+  skipSuccessfulRequests: true
+});
+
+app.use('/api/auth/login', authLimiter);
 
 // Body parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Connect to database and initialize session
+await connectDB();
+const sessionMiddleware = await createSessionMiddleware();
+app.use(sessionMiddleware);
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -54,9 +80,6 @@ app.use((req, res) => {
     message: 'Route not found'
   });
 });
-
-// Connect to database
-connectDB();
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

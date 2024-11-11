@@ -130,5 +130,25 @@ export const paymentController = {
       console.error('Error getting verified transactions:', error);
       res.status(400).json({ message: error.message });
     }
+  },
+
+  async getAllTransactions(req, res) {
+    try {
+      const transactions = await Transaction.find({})
+        .populate({
+          path: 'customerId',
+          select: 'fullName accountNumber email'
+        })
+        .populate({
+          path: 'verificationDetails.verifiedBy',
+          select: 'fullName'
+        })
+        .sort('-createdAt');
+
+      res.json(transactions);
+    } catch (error) {
+      console.error('Error getting all transactions:', error);
+      res.status(400).json({ message: error.message });
+    }
   }
 }; 

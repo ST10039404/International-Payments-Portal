@@ -62,10 +62,21 @@ userSchema.pre('save', async function(next) {
   try {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
-    next();
   } catch (error) {
     next(error);
   }
+
+  // Add validation for SQL injection patterns
+  const sqlInjectionPattern = /(\b(select|insert|update|delete|drop|union|exec|declare)\b)|([;()])/i;
+  const fields = ['fullName', 'email', 'accountNumber'];
+  
+  for (const field of fields) {
+    if (this[field] && sqlInjectionPattern.test(this[field])) {
+      throw new Error(`Invalid characters detected in ${field}`);
+    }
+  }
+
+  next();
 });
 
 // Method to compare passwords

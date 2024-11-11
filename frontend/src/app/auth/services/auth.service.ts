@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, EMPTY } from 'rxjs';
+import { map, catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -11,6 +11,7 @@ export class AuthService {
   private apiUrl = `${environment.apiUrl}/auth`;
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
+  private tokenExpirationTimer: any;
 
   constructor(private http: HttpClient) {
     this.currentUserSubject = new BehaviorSubject<any>(
@@ -59,7 +60,35 @@ export class AuthService {
       );
   }
 
+  private refreshToken() {
+    const currentUser = this.currentUserValue;
+    if (currentUser && currentUser.refreshToken) {
+      return this.http.post<any>(`${environment.apiUrl}/auth/refresh-token`, {
+        refreshToken: currentUser.refreshToken
+      }).pipe(
+        tap(tokens => {
+          currentUser.token = tokens.accessToken;
+          currentUser.refreshToken = tokens.refreshToken;
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
+          this.currentUserSubject.next(currentUser);
+          this.startTokenTimer();
+        })
+      );
+    }
+    return EMPTY;
+  }
+
+  private startTokenTimer() {
+    const jwtToken = JSON.parse(atob(this.currentUserValue.token.split('.')[1]));
+    const expires = new Date(jwtToken.exp * 1000);
+    const timeout = expires.getTime() - Date.now() - (60 * 1000); // Refresh 1 minute before expiry
+    this.tokenExpirationTimer = setTimeout(() => this.refreshToken().subscribe(), timeout);
+  }
+
   logout() {
+    if (this.tokenExpirationTimer) {
+      clearTimeout(this.tokenExpirationTimer);
+    }
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
   }

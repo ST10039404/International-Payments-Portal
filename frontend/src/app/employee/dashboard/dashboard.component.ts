@@ -16,6 +16,10 @@ import { AuthService } from '../../auth/services/auth.service';
             <mat-icon>send</mat-icon>
             SWIFT Submissions
           </a>
+           <a mat-list-item routerLink="all-transactions" routerLinkActive="active">
+            <mat-icon>list_alt</mat-icon>
+            All Transactions
+          </a>
           <a mat-list-item (click)="logout()">
             <mat-icon>exit_to_app</mat-icon>
             Logout

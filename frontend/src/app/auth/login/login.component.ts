@@ -130,9 +130,17 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private authService: AuthService
   ) {
-    // Redirect if already logged in
-    if (this.authService.currentUserValue) {
-      this.router.navigate(['/']);
+    console.log('LoginComponent constructor called');
+    console.log('Current user value:', this.authService.currentUserValue);
+    
+    // Only redirect if user is logged in AND has a valid role
+    if (this.authService.currentUserValue && 
+        (this.authService.currentUserValue.role === 'customer' || 
+         this.authService.currentUserValue.role === 'employee')) {
+      console.log('Valid user already logged in, redirecting');
+      const route = this.authService.currentUserValue.role === 'employee' ? 
+        '/employee/dashboard' : '/customer/dashboard';
+      this.router.navigate([route]);
     }
   }
 

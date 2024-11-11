@@ -1,11 +1,11 @@
 {
   "ExpandedNodes": [
     "",
+    "\\.github",
+    "\\.github\\workflows",
     "\\frontend",
-    "\\frontend\\src\\app\\auth\\login",
-    "\\frontend\\src\\app\\auth\\services",
-    "\\frontend\\src\\app\\welcome"
+    "\\frontend\\src"
   ],
-  "SelectedNode": "\\.gitignore",
+  "SelectedNode": "\\.github\\workflows\\ci.yml",
   "PreviewInSolutionExplorer": false
 }

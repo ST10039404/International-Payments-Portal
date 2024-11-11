@@ -47,5 +47,9 @@ router.get('/verified',
   restrictTo('employee'), 
   paymentController.getVerifiedTransactions
 );
+router.get('/all-transactions', 
+  restrictTo('employee'), 
+  paymentController.getAllTransactions
+);
 
 export default router; 

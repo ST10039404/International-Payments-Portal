@@ -23,6 +23,8 @@
     "@angular/platform-browser": "^18.2.11",
     "@angular/platform-browser-dynamic": "^18.2.11",
     "@angular/router": "^18.2.11",
+    "@sentry/angular": "^8.37.1",
+    "@sentry/tracing": "^7.114.0",
     "jsonwebtoken": "^9.0.2",
     "rxjs": "^7.8.0",
     "tslib": "^2.3.0",

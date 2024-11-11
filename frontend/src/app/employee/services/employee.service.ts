@@ -30,4 +30,8 @@ export class EmployeeService {
       { transactions: transactionIds }
     );
   }
+
+  getAllTransactions(): Observable<Transaction[]> {
+    return this.http.get<Transaction[]>(`${this.apiUrl}/all-transactions`);
+  }
 }
