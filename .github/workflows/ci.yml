@@ -8,7 +8,7 @@ on:
     branches:
       - master
   workflow_dispatch:
-    
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -24,12 +24,14 @@ jobs:
 
     - name: Install dependencies
       run: npm ci
-
+      working-directory: ./international-payments-portal
     - name: Run lint checks
       run: npm run lint
-
+      working-directory: ./international-payments-portal
     - name: Run unit tests
       run: npm test -- --watch=false --code-coverage
+      working-directory: ./international-payments-portal
 
     - name: Build the project
       run: npm run build -- --prod
+      working-directory: ./international-payments-portal
