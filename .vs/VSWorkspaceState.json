@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\frontend",
+    "\\frontend\\src\\app\\auth\\login",
+    "\\frontend\\src\\app\\auth\\services",
+    "\\frontend\\src\\app\\welcome"
+  ],
+  "SelectedNode": "\\.gitignore",
+  "PreviewInSolutionExplorer": false
+}
